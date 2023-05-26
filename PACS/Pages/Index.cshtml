@@ -1,0 +1,48 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Авторизация";
+}
+
+<style>
+    .ali {
+        padding: 50px;
+        background: #ccc;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+    .ali-center {
+
+        text-align: center;
+    }
+
+    .font {
+        font-size: large;
+    }
+</style>
+
+<div class="ali">
+    <h3 class="ali-center">Авторизация</h3>
+    <form method="post">
+        <label class="font col-form-label">Логин</label>
+        <div>
+            <div class="col-sm-12">
+                <input class="form-control" name="login" value="@Model.Login">
+            </div>
+        </div>
+        <label for="inputPassword3" class="font col-sm-2 col-form-label">Пароль</label>
+        <div class="row mb-3">
+
+            <div class="col-sm-12">
+                <input type="password" class="form-control" id="inputPassword3" name="password" value="@Model.Password">
+            </div>
+            <label>@Model.Message</label>
+        </div>
+
+        <input class="btn btn-primary" type="submit" value="Авторизоваться" />
+    </form>
+</div>

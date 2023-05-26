@@ -1,0 +1,47 @@
+﻿@page
+@using PACS.Models;
+@model PACS.Pages.ListOffendersModel
+@{
+    ViewData["Title"] = "Нарушители";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <h3 class="align-content-center">Нарушители</h3>
+        </div>
+        
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">ФИО</th>
+            <th scope="col">Должность</th>
+            <th scope="col">Код Dec</th>
+            <th scope="col">Код W26</th>
+            <th scope="col">Код Hex</th>
+            <th scope="col">Статус прохода</th>
+            <th scope="col">КПП</th>
+            <th scope="col">Время</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Event events in @Model.Events)
+        {
+            <tr>
+                <th scope="row">@events.Id</th>
+                <td>@events.Name</td>
+                <td>@events.Position</td>
+                <td>@events.Dec</td>
+                <td>@events.W26</td>
+                <td>@events.Hex</td>
+                <td>@events.PassOrDeny</td>
+                <td>@events.Point.Name</td>
+                <td>@events.TimeConverted</td>
+            </tr>
+        }
+
+
+    </tbody>
