@@ -69,27 +69,40 @@ namespace PACS.Pages
                 }
                 else
                 {
-                    if (lastCyclePer == null || lastCarTimeP2.TimeConverted == lastCyclePer.TimeP2)
+                    if (lastCyclePer == null)
                     {
-                        return;
+                        var lastCycleP1 = _pacsContext.Cycles.ToList().LastOrDefault(s => s.TimeP1 != null);
+                        lastCycleP1.TimeP2 = lastCarTimeP2.TimeConverted;
+                        _pacsContext.Cycles.Update(lastCycleP1);
+                        _pacsContext.SaveChanges();
+                        lastCycleP1.Delta = lastCycleP1.TimeP2 - lastCycleP1.TimeP1;
+                        _pacsContext.Cycles.Update(lastCycleP1);
+                        _pacsContext.SaveChanges();
                     }
                     else
                     {
-                        lastCycle = _pacsContext.Cycles.ToList().LastOrDefault(s => s.TimeP2 == null);
-                        if (lastCycle != null && lastCycle.TimeP2 != lastCarTimeP2.TimeConverted)
-                        {
-                            lastCycle.TimeP2 = lastCarTimeP2.TimeConverted;
-                            _pacsContext.Cycles.Update(lastCycle);
-                            _pacsContext.SaveChanges();
-                            lastCycle.Delta = lastCycle.TimeP2 - lastCycle.TimeP1;
-                            _pacsContext.Cycles.Update(lastCycle);
-                            _pacsContext.SaveChanges();
-                        }
-                        else
+                        if (lastCarTimeP2.TimeConverted == lastCyclePer.TimeP2)
                         {
                             return;
                         }
-                        return;
+                        else
+                        {
+                            lastCycle = _pacsContext.Cycles.ToList().LastOrDefault(s => s.TimeP2 == null);
+                            if (lastCycle != null && lastCycle.TimeP2 != lastCarTimeP2.TimeConverted)
+                            {
+                                lastCycle.TimeP2 = lastCarTimeP2.TimeConverted;
+                                _pacsContext.Cycles.Update(lastCycle);
+                                _pacsContext.SaveChanges();
+                                lastCycle.Delta = lastCycle.TimeP2 - lastCycle.TimeP1;
+                                _pacsContext.Cycles.Update(lastCycle);
+                                _pacsContext.SaveChanges();
+                            }
+                            else
+                            {
+                                return;
+                            }
+                            return;
+                        }
                     }
                 }
                 
