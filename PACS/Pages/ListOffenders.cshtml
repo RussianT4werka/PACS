@@ -4,16 +4,41 @@
 @{
     ViewData["Title"] = "Нарушители";
 }
+
+<style>
+    a {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+</style>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand">СКУД</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="btn btn-danger" asp-page="/Index">Выйти</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-success" asp-page="/ListPass" asp-page-handler="@Model.UserSession">Проходы</a>
+            </li>
+            <li class="nav-item">
+                <a class="btn btn-primary" asp-page="/ListCycles" asp-page-handler="@Model.UserSession">Контроль</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
 <div class="container">
     <div class="row">
         <div class="col-3">
-            <h3 class="align-content-center">Нарушители</h3>
+            <h3 class="align-content-center">Список нарушителей</h3>
         </div>
-        
+
     </div>
 </div>
 
-<table class="table">
+<table class="table container">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -22,26 +47,53 @@
             <th scope="col">Код Dec</th>
             <th scope="col">Код W26</th>
             <th scope="col">Код Hex</th>
+            <th scope="col">Вход / выход</th>
             <th scope="col">Статус прохода</th>
             <th scope="col">КПП</th>
             <th scope="col">Время</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (Event events in @Model.Events)
+        @try
         {
-            <tr>
-                <th scope="row">@events.Id</th>
-                <td>@events.Name</td>
-                <td>@events.Position</td>
-                <td>@events.Dec</td>
-                <td>@events.W26</td>
-                <td>@events.Hex</td>
-                <td>@events.PassOrDeny</td>
-                <td>@events.Point.Name</td>
-                <td>@events.TimeConverted</td>
-            </tr>
+            @foreach (Event events in @Model.Events)
+            {
+                <tr>
+                    <th scope="row">@events.Id</th>
+                    <td>@events.Name</td>
+                    <td>@events.Position</td>
+                    <td>@events.Dec</td>
+                    <td>@events.W26</td>
+                    <td>@events.Hex</td>
+                    <td>@events.DirNameNavigation.Name</td>
+                    <td>@events.PassDeny.Name</td>
+                    <td>@events.Point.Name</td>
+                    <td>@events.TimeConverted</td>
+                </tr>
+            }
+        }
+        catch
+        {
+            return;
         }
 
 
+
     </tbody>
+</table>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            setTimeout('refresh()', 10000); // интервал обновления 10 секунд (10000 миллисекунд)
+        }
+
+        function refresh() {
+            window.location.reload(true);
+        }
+    </script>
+
+  
+
+    
+
+

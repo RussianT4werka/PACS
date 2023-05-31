@@ -22,6 +22,8 @@ namespace PACS.Pages
 
         public IActionResult OnPost(string login, string password)
         {
+            
+
             if(string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
             {
                 Message = "Не все поля заполнены";

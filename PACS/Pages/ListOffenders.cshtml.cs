@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using PACS.Classes;
 using PACS.DB;
 using PACS.Models;
 using PACS.Tools;
@@ -18,27 +20,22 @@ namespace PACS.Pages
         {
             _pacsContext = pacsContext;
         }
-
-        //private void Timer()
-        //{
-        //    var timer = new System.Timers.Timer(10000);
-        //    timer.Elapsed += OnGet();
-        //    timer.AutoReset = true;
-        //    timer.Enabled = true;
-        //}
         public void OnGet(string handler)
         {
             Admin admin = Session.GetAdmin(handler);
             UserSession = handler;
-            Events = _pacsContext.Events.ToList();
-            foreach(var time in Events)
+
+            try
             {
-                var convert = DateTime.Parse(time.Time);
-                time.TimeConverted = convert;
-                _pacsContext.Events.Update(time);
-                _pacsContext.SaveChanges();
+                Events = _pacsContext.Events.ToList();
+                Time.ConvertTime(_pacsContext, Events);
             }
-            Events = _pacsContext.Events.Where( s => s.TimeConverted.Value.Hour > 9 && s.TimeConverted.Value.Minute > 30).ToList();
-        }
+            catch
+            {
+                return;
+            }
+            Events = _pacsContext.Events.Include(s => s.Point).Include(s => s.DirNameNavigation).Include(s => s.PassDeny).ToList();
+            
+        }//s.TimeConverted.Value.TimeOfDay > new TimeSpan(9,30,0)
     }
 }

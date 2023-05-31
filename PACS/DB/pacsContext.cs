@@ -18,9 +18,12 @@ namespace PACS.DB
         }
 
         public virtual DbSet<Admin> Admins { get; set; } = null!;
+        public virtual DbSet<Cycle> Cycles { get; set; } = null!;
         public virtual DbSet<Event> Events { get; set; } = null!;
+        public virtual DbSet<Offender> Offenders { get; set; } = null!;
         public virtual DbSet<Personal> Personals { get; set; } = null!;
         public virtual DbSet<Point> Points { get; set; } = null!;
+        public virtual DbSet<Translate> Translates { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -48,19 +51,32 @@ namespace PACS.DB
                 entity.Property(e => e.Surname).HasMaxLength(50);
             });
 
+            modelBuilder.Entity<Cycle>(entity =>
+            {
+                entity.ToTable("Cycle");
+
+                entity.Property(e => e.TimeP1).HasColumnType("datetime");
+
+                entity.Property(e => e.TimeP2).HasColumnType("datetime");
+
+                entity.Property(e => e.W26).HasMaxLength(50);
+            });
+
             modelBuilder.Entity<Event>(entity =>
             {
                 entity.ToTable("Event");
 
                 entity.Property(e => e.Dec).HasMaxLength(50);
 
-                entity.Property(e => e.DirName).HasMaxLength(50);
+                entity.Property(e => e.DirName).HasMaxLength(7);
 
                 entity.Property(e => e.Hex).HasMaxLength(50);
 
                 entity.Property(e => e.Name).HasMaxLength(50);
 
-                entity.Property(e => e.PassOrDeny).HasMaxLength(50);
+                entity.Property(e => e.PassDenyId)
+                    .HasMaxLength(7)
+                    .HasColumnName("PassDenyID");
 
                 entity.Property(e => e.PointId).HasColumnName("PointID");
 
@@ -72,10 +88,41 @@ namespace PACS.DB
 
                 entity.Property(e => e.W26).HasMaxLength(50);
 
+                entity.HasOne(d => d.DirNameNavigation)
+                    .WithMany(p => p.EventDirNameNavigations)
+                    .HasForeignKey(d => d.DirName)
+                    .HasConstraintName("FK_Event_Translate1");
+
+                entity.HasOne(d => d.PassDeny)
+                    .WithMany(p => p.EventPassDenies)
+                    .HasForeignKey(d => d.PassDenyId)
+                    .HasConstraintName("FK_Event_Translate");
+
                 entity.HasOne(d => d.Point)
                     .WithMany(p => p.Events)
                     .HasForeignKey(d => d.PointId)
                     .HasConstraintName("FK_Event_Point");
+            });
+
+            modelBuilder.Entity<Offender>(entity =>
+            {
+                entity.ToTable("Offender");
+
+                entity.Property(e => e.Dec)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+
+                entity.Property(e => e.Hex)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
+                entity.Property(e => e.Position).HasMaxLength(50);
+
+                entity.Property(e => e.W26)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
             });
 
             modelBuilder.Entity<Personal>(entity =>
@@ -90,6 +137,15 @@ namespace PACS.DB
             modelBuilder.Entity<Point>(entity =>
             {
                 entity.ToTable("Point");
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Translate>(entity =>
+            {
+                entity.ToTable("Translate");
+
+                entity.Property(e => e.Id).HasMaxLength(7);
 
                 entity.Property(e => e.Name).HasMaxLength(50);
             });
