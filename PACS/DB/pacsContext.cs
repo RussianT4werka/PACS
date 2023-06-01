@@ -44,7 +44,7 @@ namespace PACS.DB
 
                 entity.Property(e => e.Name).HasMaxLength(50);
 
-                entity.Property(e => e.Password).HasMaxLength(50);
+                entity.Property(e => e.Password).HasMaxLength(100);
 
                 entity.Property(e => e.Patronymic).HasMaxLength(50);
 
@@ -55,11 +55,19 @@ namespace PACS.DB
             {
                 entity.ToTable("Cycle");
 
+                entity.Property(e => e.EventId).HasColumnName("EventID");
+
                 entity.Property(e => e.TimeP1).HasColumnType("datetime");
 
                 entity.Property(e => e.TimeP2).HasColumnType("datetime");
 
                 entity.Property(e => e.W26).HasMaxLength(50);
+
+                entity.HasOne(d => d.Event)
+                    .WithMany(p => p.Cycles)
+                    .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Cycle_Event");
             });
 
             modelBuilder.Entity<Event>(entity =>
@@ -91,16 +99,19 @@ namespace PACS.DB
                 entity.HasOne(d => d.DirNameNavigation)
                     .WithMany(p => p.EventDirNameNavigations)
                     .HasForeignKey(d => d.DirName)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Event_Translate1");
 
                 entity.HasOne(d => d.PassDeny)
                     .WithMany(p => p.EventPassDenies)
                     .HasForeignKey(d => d.PassDenyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Event_Translate");
 
                 entity.HasOne(d => d.Point)
                     .WithMany(p => p.Events)
                     .HasForeignKey(d => d.PointId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Event_Point");
             });
 

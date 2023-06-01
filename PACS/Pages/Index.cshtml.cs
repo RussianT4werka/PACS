@@ -31,9 +31,9 @@ namespace PACS.Pages
             }
             else
             {
-                var admin = _pacsContext.Admins.FirstOrDefault(s => s.Login == login && s.Password == password);
-               
-                if(admin != null)
+                var admin = _pacsContext.Admins.FirstOrDefault(s => s.Login == login && s.Password == Hash.HashPass(password));
+
+                if (admin != null)
                 {
                     return RedirectToPage("ListPass", Session.CreateSession(admin));
                 }
@@ -42,6 +42,19 @@ namespace PACS.Pages
                     Message = "Неверный логин или пароль";
                     return null;
                 }
+                //Для создания хешированного пароля
+                /*var User = _pacsContext.Admins.FirstOrDefault(s => s.Id == 1);
+                if (User != null)
+                {
+                    User.Password = Hash.HashPass(password);
+                    _pacsContext.Admins.Update(User);
+                    _pacsContext.SaveChanges();
+                    return null;
+                }
+                else
+                {
+                    return null;
+                }*/
             }
         }
     }
