@@ -79,7 +79,7 @@ namespace PACS.Pages
                 }
                 else
                 {
-                    foreach (var events2 in Events.Where(s => s.PointId == 2 && s.Id == lastCycle.Id))
+                    foreach (var events2 in Events.Where(s => s.PointId == 2))
                     {
                         foreach (var cycle in Cycles.Where(s => s.TimeP1 != null && s.TimeP2 == null && s.W26 == events2.W26))
                         {
