@@ -65,7 +65,18 @@
                     <td>@cycles.W26</td>
                     <td>@cycles.TimeP1</td>
                     <td>@cycles.TimeP2</td>
-                    <td>@cycles.Delta</td>
+                    @if(cycles.Delta < new TimeSpan(0,0,10))
+                    {
+                        <td itemid="deltaG">@cycles.Delta</td>
+                    }
+                    else if (cycles.Delta > new TimeSpan(0, 0, 10) && cycles.Delta < new TimeSpan(0, 0, 20))
+                    {
+                        <td itemid="deltaY">@cycles.Delta</td>
+                    }
+                    else if(cycles.Delta > new TimeSpan(0, 0, 20))
+                    {
+                        <td itemid="deltaR">@cycles.Delta</td>
+                    }
                 </tr>
             }
         }
@@ -78,12 +89,41 @@
 
 
 <script type="text/javascript">
-    window.onload = function () {
-        setTimeout('refresh()', 10000); // интервал обновления 10 секунд (10000 миллисекунд)
+    // Получение всех ячеек таблицы с классом "delta"
+    var deltaCells = document.querySelectorAll("td[itemid='deltaG']");
+    var deltaCellsY = document.querySelectorAll("td[itemid='deltaY']");
+    var deltaCellsR = document.querySelectorAll("td[itemid='deltaR']");
+
+    // Добавление обработчика клика на каждую ячейку
+    deltaCells.forEach(function (cell) {
+        cell.addEventListener("click", function () {
+            changeBackground(cell, "green"); // вызов метода changeBackground с текущей ячейкой и передачей цвета
+        });
+    });
+
+    deltaCellsY.forEach(function (cell) {
+        cell.addEventListener("click", function () {
+            changeBackground(cell, "yellow"); // вызов метода changeBackground с текущей ячейкой и передачей цвета
+        });
+    });
+
+    deltaCellsR.forEach(function (cell) {
+        cell.addEventListener("click", function () {
+            changeBackground(cell, "red"); // вызов метода changeBackground с текущей ячейкой и передачей цвета
+        });
+    });
+
+    function changeBackground(cell, color) {
+        if (color === "green") {
+            cell.style.backgroundColor = "green"; // установить цвет фона ячейки
+        }
+        else if (color === "yellow") {
+            cell.style.backgroundColor = "yellow"; // установить цвет фона ячейки
+        }
+        else if (color === "red") {
+            cell.style.backgroundColor = "red"; // установить цвет фона ячейки
+        }
     }
 
-    function refresh() {
-        window.location.reload(true);
-        window.location.r
-    }
+    
 </script>
