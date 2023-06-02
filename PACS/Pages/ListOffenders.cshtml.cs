@@ -29,13 +29,13 @@ namespace PACS.Pages
             {
                 Events = _pacsContext.Events.ToList();
                 Time.ConvertTime(_pacsContext, Events);
+                Events = _pacsContext.Events.Include(s => s.Point).Include(s => s.DirNameNavigation).Include(s => s.PassDeny).ToList();
             }
             catch
             {
                 return;
             }
-            Events = _pacsContext.Events.Include(s => s.Point).Include(s => s.DirNameNavigation).Include(s => s.PassDeny).ToList();
             
-        }//s.TimeConverted.Value.TimeOfDay > new TimeSpan(9,30,0)
+        }
     }
 }

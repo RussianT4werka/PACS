@@ -1,26 +1,19 @@
 ﻿@page
 @using PACS.Models;
 @model PACS.Pages.ListPassModel
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 @{
     ViewData["Title"] = "Список проходов";
 }
 <style>
     a {
-        margin-left: 10%;
-        margin-right: 10%;
-    }
-
-    .btn-warning {
-        background-color: #fc7703;
-        color: white;
-    }
-    .btn-warning:hover {
-        background-color: #fc6b03;
-        color: white;
+        margin-left: 5px;
+        margin-right: 5px;
     }
 </style>
 
-<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar sticky-top navbar-expand navbar-dark bg-dark">
     <a class="navbar-brand">СКУД</a>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
@@ -35,6 +28,7 @@
             </li>
         </ul>
     </div>
+    
 </nav>
 
 <div class="container">
@@ -48,35 +42,48 @@
 <table class="table container">
     <thead>
         <tr>
-            <th scope="col">#</th>
             <th scope="col">ФИО</th>
             <th scope="col">Должность</th>
-            <th scope="col">Код Dec</th>
-            <th scope="col">Код W26</th>
-            <th scope="col">Код Hex</th>
+            <th scope="col">Код</th>
             <th scope="col">Вход / выход</th>
             <th scope="col">Статус прохода</th>
             <th scope="col">КПП</th>
             <th scope="col">Время</th>
         </tr>
+        <style type="text/css">
+            TABLE {
+                border-collapse: collapse; /* Убираем двойные линии между ячейками */
+                width: 300px; /* Ширина таблицы */
+            }
+
+            TH, TD {
+                border: 1px solid black; /* Параметры рамки */
+                text-align: center; /* Выравнивание по центру */
+                padding: 4px; /* Поля вокруг текста */
+            }
+        </style>
     </thead>
     <tbody>
         @try
         {
-            @foreach(Event events in @Model.Events)
+            if(Model.Events == null)
             {
-                <tr>
-                    <th scope="row">@events.Id</th>
-                    <td>@events.Name</td>
-                    <td>@events.Position</td>
-                    <td>@events.Dec</td>
-                    <td>@events.W26</td>
-                    <td>@events.Hex</td>
-                    <td>@events.DirNameNavigation.Name</td>
-                    <td>@events.PassDeny.Name</td>
-                    <td>@events.Point.Name</td>
-                    <td>@events.Time</td>
-                </tr>
+                return;
+            }
+            else
+            {
+                @foreach (Event events in @Model.Events)
+                {
+                    <tr>
+                        <td><b>@events.Name</b></td>
+                        <td>@events.Position</td>
+                        <td>@events.W26</td>
+                        <td>@events.DirNameNavigation.Name</td>
+                        <td>@events.PassDeny.Name</td>
+                        <td>@events.Point.Name</td>
+                        <td>@events.TimeConverted.Value.TimeOfDay</td>
+                    </tr>
+                }
             }
         }
         catch

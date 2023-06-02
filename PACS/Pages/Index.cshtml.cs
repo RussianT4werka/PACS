@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PACS.DB;
+using PACS.Models;
 using PACS.Tools;
 
 namespace PACS.Pages
@@ -13,6 +14,7 @@ namespace PACS.Pages
         public string Login { get; set; }
         public string Password { get; set; }
         public string Message { get; set; }
+        private Admin admin;
 
         public IndexModel(ILogger<IndexModel> logger, pacsContext pacsContext)
         {
@@ -31,7 +33,14 @@ namespace PACS.Pages
             }
             else
             {
-                var admin = _pacsContext.Admins.FirstOrDefault(s => s.Login == login && s.Password == Hash.HashPass(password));
+                try
+                {
+                    admin = _pacsContext.Admins.FirstOrDefault(s => s.Login == login && s.Password == Hash.HashPass(password));
+                }
+                catch
+                {
+                    return null;
+                }
 
                 if (admin != null)
                 {

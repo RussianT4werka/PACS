@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using PACS.Classes;
 using PACS.DB;
 using PACS.Models;
@@ -27,7 +28,7 @@ namespace PACS.Pages
             {
                 Events = _pacsContext.Events.ToList();
                 Time.ConvertTime(_pacsContext, Events);
-                Cycles = _pacsContext.Cycles.ToList();
+                Cycles = _pacsContext.Cycles.Include( s => s.Event).ToList();
                 CreateCycles.CC(_pacsContext, Events, lastCycle, Cycles);
             }
             catch

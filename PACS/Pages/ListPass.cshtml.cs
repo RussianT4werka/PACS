@@ -15,9 +15,6 @@ namespace PACS.Pages
         public pacsContext _pacsContext { get; }
         public Cycle Cycle { get; set; }
         public List<Cycle> Cycles { get; set; }
-
-        private Event lastEventP1;
-        private Event lastEventP2;
         private Cycle lastCycle;
         public ListPassModel(pacsContext pacsContext)
         {
@@ -32,14 +29,14 @@ namespace PACS.Pages
             {
                 Events = _pacsContext.Events.ToList();
                 Time.ConvertTime(_pacsContext, Events);
+                Cycles = _pacsContext.Cycles.Include(s => s.Event).ToList();
+                CreateCycles.CC(_pacsContext, Events, lastCycle, Cycles);
+                Events = _pacsContext.Events.Include(s => s.Point).Include(s => s.DirNameNavigation).Include(s => s.PassDeny).Where(s => s.TimeConverted.Value.Date == DateTime.Now.Date).ToList();
             }
             catch
             {
                 return;
             }
-            
-            Events = _pacsContext.Events.Include(s => s.Point).Include(s => s.DirNameNavigation).Include(s => s.PassDeny).Where(s => s.TimeConverted.Value.Date == DateTime.Now.Date).ToList();
-
         }
     }
 }
